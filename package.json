@@ -19,9 +19,6 @@
       "build/**/*",
       "node_modules/**/*"
     ],
-    "win": {
-      "icon": "./public/Clock-tracker.png" 
-    },
     "directories": {
       "buildResources": "assets"
     },

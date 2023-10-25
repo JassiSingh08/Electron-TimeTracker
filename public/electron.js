@@ -32,7 +32,8 @@ const ExpressServer = require("./express");
 
 //0.0.1
 const { autoUpdater } = require("electron-updater");
-const commandConvert = require("cross-env/src/command");
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 //MAIN WINDOW
 let mainWindow;
@@ -58,23 +59,21 @@ function createWindow() {
   autoUpdater.checkForUpdates();
 }
 
-//SECOND INSTANCE CHECK 
-
-const gotTheLock = app.requestSingleInstanceLock()
-
-if (!gotTheLock) {
-  app.quit()
-} else {
-  app.on('second-instance', () => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-      mainWindow.focus()
-    }
-  }) 
-}
-
+//SECOND INSTANCE CHECK
 
 app.whenReady().then(() => {
+  const gotTheLock = app.requestSingleInstanceLock();
+
+  if (!gotTheLock) {
+    app.quit();
+  } else {
+    app.on("second-instance", () => {
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+      }
+    });
+  }
   createWindow();
   //TRAY
   tray = new Tray(path.join(__dirname, "Clock-tracker-tray.png"));

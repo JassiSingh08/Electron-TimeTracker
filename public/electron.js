@@ -6,6 +6,7 @@ const {
   desktopCapturer,
   screen,
   ipcMain,
+  dialog,
 } = require("electron");
 
 const path = require("path");
@@ -29,6 +30,10 @@ let processInterval;
 //express
 const ExpressServer = require("./express");
 
+//0.0.1
+const { autoUpdater } = require("electron-updater");
+const commandConvert = require("cross-env/src/command");
+
 //MAIN WINDOW
 let mainWindow;
 let tray;
@@ -49,7 +54,25 @@ function createWindow() {
   ExpressServer(() => {
     console.log("Express server is running.");
   });
+
+  autoUpdater.checkForUpdates();
 }
+
+//SECOND INSTANCE CHECK 
+
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+  }) 
+}
+
 
 app.whenReady().then(() => {
   createWindow();
@@ -183,6 +206,7 @@ async function captureScreen() {
   }
 }
 
+//ONLINE/OFFLINE
 const processQueue = () => {
   return new Promise((resolve) => {
     const options = {
@@ -276,3 +300,48 @@ processInterval = setInterval(() => {
       console.log("error checking internet connection");
     });
 }, 10000);
+
+// auto updates
+
+autoUpdater.on("checking-for-update", () => {
+  console.log("Checking for updates...");
+});
+
+autoUpdater.on("update-available", (info) => {
+  console.log("Update available:", info.version);
+  autoUpdater.downloadUpdate();
+});
+
+autoUpdater.on("update-not-available", () => {
+  console.log("No updates available");
+});
+
+autoUpdater.on("error", (err) => {
+  console.error("Update error:", err);
+});
+
+autoUpdater.on("download-progress", (progressObj) => {
+  console.log(`Downloaded ${progressObj.percent}%`);
+});
+
+autoUpdater.on("update-downloaded", () => {
+  console.log("Update downloaded and ready to install");
+  const dialogOptions = {
+    type: "info",
+    buttons: ["Install", "Later"],
+    defaultId: 0,
+    title: "Update Available",
+    message: "A new version is available. Install it now?",
+  };
+
+  const response = dialog.showMessageBox(dialogOptions);
+
+  if (response === 0) {
+    autoUpdater.quitAndInstall();
+  }
+});
+
+autoUpdater.on("error", (event, error) => {
+  // An error occurred during the update process.
+  console.error("Update error:", error);
+});

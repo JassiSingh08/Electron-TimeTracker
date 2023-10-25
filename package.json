@@ -1,15 +1,20 @@
 {
-  "name": "electron-time-tracker",
+  "name": "clockify-time-tracker",
   "description": "This is a sample electron-react app tht clicks screenshot at regular intervals",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Jass",
   "private": true,
-  "productName": "Clockify - TimeTracker",
+  "productName": "Clockify-TimeTracker",
   "main": "public/electron.js",
   "homepage": "./",
+  "repository": "https://github.com/JassiSingh08/Electron-TimeTracker",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "build": {
     "appId": "com.jass.timetracker",
-    "productName": "Clockify - TimeTracker",
+    "productName": "Clockify-TimeTracker",
     "files": [
       "build/**/*",
       "node_modules/**/*"
@@ -31,6 +36,7 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "electron-is-dev": "^2.0.0",
+    "electron-updater": "^6.1.4",
     "electronmon": "^2.0.2",
     "express": "^4.18.2",
     "firebase": "^10.5.0",
@@ -48,7 +54,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"cross-env BROWSER=none npm run start\" \" electromon .\"",
+    "electron-dev": "concurrently \"cross-env BROWSER=none npm run start\"",
     "package": "electron-builder build --win -c.extraMetadata.main=build/electron.js --publish never",
     "build-er": "npm run build && npm run package"
   },

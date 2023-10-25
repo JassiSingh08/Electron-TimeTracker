@@ -1,7 +1,7 @@
 {
   "name": "clockify-time-tracker",
   "description": "This is a sample electron-react app tht clicks screenshot at regular intervals",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "author": "Jass",
   "private": true,
   "productName": "Clockify-TimeTracker",
@@ -19,6 +19,9 @@
       "build/**/*",
       "node_modules/**/*"
     ],
+    "win": {
+      "icon": "./public/Clock-tracker.png" 
+    },
     "directories": {
       "buildResources": "assets"
     },
